@@ -68,7 +68,7 @@
         </dependencies>
     </dependencyManagement>-->
 
-    <!--<dependencyManagement>
+    <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -107,8 +107,8 @@
                 <version>1.18.10</version>
             </dependency>
         </dependencies>
-    </dependencyManagement>-->
-    <dependencyManagement>
+    </dependencyManagement>
+    <!--<dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -147,7 +147,7 @@
                 <version>1.18.10</version>
             </dependency>
         </dependencies>
-    </dependencyManagement>
+    </dependencyManagement>-->
     <build>
         <plugins>
             <plugin>
