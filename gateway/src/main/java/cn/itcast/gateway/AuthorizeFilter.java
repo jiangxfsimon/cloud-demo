@@ -2,6 +2,7 @@ package cn.itcast.gateway;
 
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -11,11 +12,17 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 //@Order(-1)
 @Component
 public class AuthorizeFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        Map<String, String> uriVariables = ServerWebExchangeUtils.getUriTemplateVariables(exchange);
+        String segment = uriVariables.get("segment");//从断言- Path=/order/{segment}中获取具体的值
+        System.out.println(segment);//http://localhost:10010/order/101?authorization=admin中得到"101"
+
         // 1.获取请求参数
         ServerHttpRequest request = exchange.getRequest();
         MultiValueMap<String, String> params = request.getQueryParams();

@@ -18,6 +18,8 @@ spring:
   #      discovery:
   #        namespace: 4d6ce343-9e1b-44df-a90f-2cf2b6b3d177 # dev环境
   #        ephemeral: false # 是否是临时实例
+  profiles:
+    active: dev
 ### 针对单个服务的 Ribbon 配置(userservice为被调用者的服务名)
 userservice:
   ribbon:
@@ -34,4 +36,3 @@ feign:
     enabled: true # 支持HttpClient的开关
     max-connections: 200 # 最大连接数
     max-connections-per-route: 50 # 单个路径的最大连接数
-

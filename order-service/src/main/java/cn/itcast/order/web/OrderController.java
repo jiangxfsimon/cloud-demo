@@ -25,15 +25,17 @@ public class OrderController {
 
 
     @GetMapping("{orderId}")
-    public Order queryOrderByUserId(@PathVariable("orderId") Long orderId) {
+    public Order queryOrderByUserId(@PathVariable("orderId") Long orderId,@RequestHeader("Param")String param) {
+        System.out.println("获取Gateway放置的值："+param);
         // 根据id查询订单并返回
         return orderService.queryOrderById(orderId);
     }
 
     @GetMapping("/config")
-    public String getConfig(@MatrixVariable Long id){
+    public String getConfig(){
         System.out.println(properties.getName());
         String property = applicationContext.getEnvironment().getProperty("common.name");
-        return properties.getName()+":"+property;
+        String current = applicationContext.getEnvironment().getProperty("common.current");
+        return properties.getName()+":"+property+":"+current;
     }
 }

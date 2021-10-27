@@ -2,8 +2,8 @@ package cn.itcast.order;
 
 import cn.itcast.feign.clients.UserClient;
 import cn.itcast.feign.config.DefaultFeignConfiguration;
-import com.netflix.loadbalancer.IRule;
-import com.netflix.loadbalancer.RandomRule;
+//import com.netflix.loadbalancer.IRule;
+//import com.netflix.loadbalancer.RandomRule;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
