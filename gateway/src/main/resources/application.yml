@@ -11,6 +11,8 @@ spring:
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848 # nacos地址
+      discovery:
+        enabled: true
     gateway:
       routes:
         - id: user-service1 # 路由标示，必须唯一
@@ -22,6 +24,17 @@ spring:
           filters: #给userservice添加过滤器
             - AddRequestHeader=who,jiangxf
             - AddRequestHeader=who1,jxf
+#            - name: Retry
+#              args:
+#                retries: 3 #重试次数默认3次,重试异常默认为IOException和TimeoutException
+#                statuses: BAD_GATEWAY #触发重试的HTTP状态代码
+#                methods: GET,POST
+#                #配置重试对应的算法。每次重试的间隔算法为firstBackoff*(factor^n)，n为重试次数。如果配置了maxBackoff，则间隔时间不能大于maxBackoff。如果配置了basedOnPreviousValue为 true，则间隔算法为prevBackoff*factor
+#                backoff:
+#                  firstBackoff: 10ms
+#                  maxBackoff: 50ms
+#                  factor: 2
+#                  basedOnPreviousValue: false
 #        - id: user-service2
 #          uri: http://127.0.0.1:8082
 #          predicates:
@@ -32,16 +45,23 @@ spring:
 #            - Path=/order/**
             - Path=/order/{segment} #{segment}可以在GatewayFilter中获取
             - After=2017-01-20T17:42:47.789-07:00[America/Denver]
-      default-filters: #给所有服务添加过滤器
-        - AddRequestHeader=Truth,Itcast is freaking awesome!
-#        - AddRequestHeader=Param,param->{segment} #向下游添加Param的请求头，值是param->匹配上的segment值
-#        添加限流过滤器
-        - name: RequestRateLimiter
-          args:
-            redis-rate-limiter.replenishRate: 1
-            redis-rate-limiter.burstCapacity: 2
-            redis-rate-limiter.requestedTokens: 1
-            key-resolver: "#{@userIdKeyResolver}" #这个必须要配置，否则返回403
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 2
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userIdKeyResolver}" #这个必须要配置，否则返回403
+#      default-filters: #给所有服务添加过滤器
+#        - AddRequestHeader=Truth,Itcast is freaking awesome!
+#        - AddRequestHeader=param,param->{segment} #向下游添加Param的请求头，值是param->匹配上的segment值
+##        添加限流过滤器
+#        - name: RequestRateLimiter
+#          args:
+#            redis-rate-limiter.replenishRate: 1
+#            redis-rate-limiter.burstCapacity: 2
+#            redis-rate-limiter.requestedTokens: 1
+#            key-resolver: "#{@userIdKeyResolver}" #这个必须要配置，否则返回403
       globalcors: # 全局的跨域处理
         add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
         corsConfigurations:
@@ -58,14 +78,18 @@ spring:
             allowedHeaders: "*" # 允许在请求中携带的头信息
             allowCredentials: true # 是否允许携带cookie
             maxAge: 360000 # 这次跨域检测的有效期
+      httpclient: #超时配置
+        connect-timeout: 3000
+        response-timeout: 3s
+    loadbalancer: #使用ReactiveLoadBalancerClientFilter替换LoadBalancerClientFilter
+      ribbon:
+        enabled: false
   redis: #The Redis RateLimiter
-    host: 192.168.138.107
-    database: 15
+    host: 127.0.0.1 #192.168.3.64
+    database: 0
     lettuce:
       pool:
         max-active: 4
         max-idle: 4
-        min-idle: 0
+        min-idle: 1
     port: 6379
-
-

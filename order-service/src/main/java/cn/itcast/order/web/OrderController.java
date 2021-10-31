@@ -7,6 +7,12 @@ import feign.Feign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.time.Duration;
+import java.time.Instant;
 
 //import java.net.http.HttpClient;
 
@@ -25,10 +31,15 @@ public class OrderController {
 
 
     @GetMapping("{orderId}")
-    public Order queryOrderByUserId(@PathVariable("orderId") Long orderId,@RequestHeader("Param")String param) {
+    public Order queryOrderByUserId(@PathVariable("orderId") Long orderId,
+                                    @RequestHeader(required = false)String param,
+                                    HttpServletRequest request, WebRequest webRequest) {
+//        request.getSession();
+
         System.out.println("获取Gateway放置的值："+param);
         // 根据id查询订单并返回
-        return orderService.queryOrderById(orderId);
+        Order order = orderService.queryOrderById(orderId);
+        return order;
     }
 
     @GetMapping("/config")
